@@ -1,24 +1,56 @@
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Navbar from './components/Navbar';
+import CountriesList from './components/CountriesList';
+import CountryDetails from './components/CountryDetails';
+import axios from 'axios';
+import {
+  Route,
+  Switch
+} from 'react-router-dom';
 
 function App() {
+  const [countries, setCountries] = useState([])
+
+  useEffect(() => {
+    const getCountries = async () => {
+      const res = await axios.get('https://restcountries.eu/rest/v2/all?fields=name;alpha3Code;')
+
+      console.log(res)
+      setCountries(res.data)
+
+
+    }
+
+    getCountries()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    <>
+      <Navbar />
+
+     
+
+       
+                <CountriesList countries={countries} />
+
+                <Switch>
+                  
+                    Country details
+                    <Route
+                      exact
+                      path="/:alpha3Code"
+                      component={CountryDetails}
+                    />
+                  
+                </Switch>
+
+
+
+           
+    </>
   );
 }
 
